@@ -1,23 +1,40 @@
-import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from './components/Home';
-import Personajes from './components/Personajes';
-import { useParams } from 'react-router-dom';
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Home } from "./view/Home";
+import { Header } from "./Components/Header";
+import { ListPokemon } from "./view/ListPokemon";
+import { FilterPovider } from "./Context/filter";
+import { PokemonPage } from "./view/PokemonPage";
+import { Loader } from "./Components/Loader";
+import { useContext } from "react";
+import { LouderContext } from "./Context/contextLouder";
+import { PageProvider } from "./Context/paginado";
 
+function App() {
+  const {louder}=useContext(LouderContext)
 
-export default function App() {
-  const {hola} = useParams();
-return (
-<div className="App">
-<BrowserRouter>
-<Navbar />
-<Routes>
- <Route path="/" element={<Home />} />
- <Route path="/Personajes/:id?" element={<Personajes />} />
- <Route path="/otros/:id?" element={<otros />} />
- </Routes>
-</BrowserRouter>
-</div>
-);
+  return (
+    <>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/Pokemon"
+            element={
+              <PageProvider>
+                <FilterPovider>
+                  <ListPokemon />
+                </FilterPovider>
+              </PageProvider>
+            }
+          />
+          <Route path="/Pokemon/:idPoke" element={<PokemonPage />} />
+        </Routes>
+        {louder?<Loader/>:""}
+      </BrowserRouter>
+    </>
+  );
 }
+
+export default App;
